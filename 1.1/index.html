@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up Form</title>
+
+    <style>
+        .form-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+        }
+        h2 { text-align: center; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; position: relative; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input {
+            width: 100%; padding: 10px; border: 2px solid #ddd;
+            border-radius: 4px; font-size: 14px; box-sizing: border-box;
+        }
+        input.valid { border-color: #28a745; }
+        input.invalid { border-color: #dc3545; }
+        .status-icon {
+            position: absolute; right: 10px; top: 37px; font-size: 18px;
+        }
+        .valid-icon { color: #28a745; }
+        .invalid-icon { color: #dc3545; }
+        .error-message {
+            color: #dc3545; font-size: 12px;
+            margin-top: 5px; display: none;
+        }
+        .error-message.show { display: block; }
+        button[type="submit"] {
+            width: 100%; padding: 12px;
+            background: #007bff; color: white;
+            border: none; border-radius: 4px;
+            font-size: 16px; cursor: pointer;
+        }
+        button[type="submit"]:disabled {
+            background: #ccc; cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Sign Up Form</h2>
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter username">
+                <span class="status-icon" id="usernameIcon"></span>
+                <div class="error-message" id="usernameError"></div>
+            </div>
+
+            <!-- TODO: Add email field -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" id="email" placeholder="Enter email">
+                <span class="status-icon" id="emailIcon"></span>
+                <div class="error-message" id="emailError"></div>
+            </div>
+
+            <!-- TODO: Add password field -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password">
+                <span class="status-icon" id="passwordIcon"></span>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+
+            <!-- TODO: Add confirm password field -->
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm password">
+                <span class="status-icon" id="confirmIcon"></span>
+                <div class="error-message" id="confirmError"></div>
+            </div>
+
+            <button type="submit" id="submitBtn" disabled>Sign Up</button>
+        </form>
+    </div>
+
+<script>
+    
+    const state = { username: false, email: false, password: false, confirm: false };
+
+    // TODO: Implement validation functions
+    function validateUsername(username) {
+        return /^[a-zA-Z0-9_]{4,20}$/.test(username);
+    }
+
+    function validateEmail(email) {
+         // TODO: Check length (4-20) and alphanumeric
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+    }
+
+    function validatePassword(password) {
+         // TODO: Check length >= 8, has uppercase, has number
+        return /^(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
+    }
+
+    // TODO: Compare passwords
+    function validatePasswordMatch(pass1, pass2) {
+        return pass1 === pass2 && pass2 !== "";
+    }
+
+    // TODO: Display and clear error messages
+    function showError(fieldId, message, inputEl, iconEl) {
+        const errorEl = document.getElementById(fieldId);
+        errorEl.textContent = message;
+        errorEl.classList.add("show");
+        inputEl.classList.add("invalid");
+        inputEl.classList.remove("valid");
+        iconEl.textContent = "X";
+        iconEl.className = "status-icon invalid-icon";
+    }
+
+    function showSuccess(inputEl, iconEl) {
+        inputEl.classList.add("valid");
+        inputEl.classList.remove("invalid");
+        iconEl.textContent = "✓";
+        iconEl.className = "status-icon valid-icon";
+    }
+
+    function clearError(fieldId) {
+        const errorEl = document.getElementById(fieldId);
+        errorEl.textContent = "";
+        errorEl.classList.remove("show");
+    }
+
+    // TODO: Validate all fields and enable/disable submit
+    function validateForm() {
+        const usernameEl = document.getElementById("username");
+        const emailEl = document.getElementById("email");
+        const passwordEl = document.getElementById("password");
+        const confirmEl = document.getElementById("confirmPassword");
+
+        const usernameIcon = document.getElementById("usernameIcon");
+        const emailIcon = document.getElementById("emailIcon");
+        const passwordIcon = document.getElementById("passwordIcon");
+        const confirmIcon = document.getElementById("confirmIcon");
+
+        state.username = validateUsername(usernameEl.value);
+        state.email = validateEmail(emailEl.value);
+        state.password = validatePassword(passwordEl.value);
+        state.confirm = validatePasswordMatch(passwordEl.value, confirmEl.value);
+
+
+        if (state.username) {
+            clearError("usernameError");
+            showSuccess(usernameEl, usernameIcon);
+        } else {
+            showError("usernameError", "4-20 characters, alphanumeric only", usernameEl, usernameIcon);
+        }
+
+        if (state.email) {
+            clearError("emailError");
+            showSuccess(emailEl, emailIcon);
+        } else {
+            showError("emailError", "Invalid email format", emailEl, emailIcon);
+        }
+
+        if (state.password) {
+            clearError("passwordError");
+            showSuccess(passwordEl, passwordIcon);
+        } else {
+            showError("passwordError", "Min 8 chars, 1 uppercase & 1 number", passwordEl, passwordIcon);
+        }
+
+        if (state.confirm) {
+            clearError("confirmError");
+            showSuccess(confirmEl, confirmIcon);
+        } else {
+            showError("confirmError", "Passwords do not match", confirmEl, confirmIcon);
+        }
+
+        document.getElementById("submitBtn").disabled = !(
+            state.username && state.email && state.password && state.confirm
+        );
+    }
+
+    // TODO: Add event listeners for real-time validation
+   const usernameInput = document.getElementById("username");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const confirmInput = document.getElementById("confirmPassword");
+
+if (usernameInput) {
+    usernameInput.addEventListener("input", validateForm);
+}
+
+if (emailInput) {
+    emailInput.addEventListener("input", validateForm);
+}
+
+if (passwordInput) {
+    passwordInput.addEventListener("input", validateForm);
+}
+
+if (confirmInput) {
+    confirmInput.addEventListener("input", validateForm);
+}
+
+    // TODO: Handle form submission
+    document.getElementById("signupForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        alert("✅ Sign Up Successful!");
+    });
+</script>
+</body>
+</html>
