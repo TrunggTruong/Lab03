@@ -167,9 +167,7 @@
     </div>
 
 <script>
-    // -------------------------------
-    // 1. Danh sách sản phẩm
-    // -------------------------------
+   
     var products = [
         { id: 1, name: 'Laptop', price: 999.99, image: '💻' },
         { id: 2, name: 'Smartphone', price: 699.99, image: '📱' },
@@ -177,14 +175,10 @@
         { id: 4, name: 'Smartwatch', price: 299.99, image: '⌚' }
     ];
 
-    // -------------------------------
-    // 2. Mảng lưu giỏ hàng
-    // -------------------------------
+ 
     var cart = [];
 
-    // -------------------------------
-    // 3. Thêm sản phẩm vào giỏ
-    // -------------------------------
+ 
     function addToCart(productId) {
         // đảm bảo productId là số (tránh lỗi khi truyền chuỗi)
         productId = Number(productId);
@@ -352,4 +346,5 @@
     renderProducts();
 </script>
 </body>
+
 </html>
